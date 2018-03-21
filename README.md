@@ -110,3 +110,25 @@ Amount of confirmations to assume that Bitcoin transaction is mature and amount 
 partnerData.confirmations(2);
 partnerData.csv(3);
 ```
+
+## RUN
+
+Application implements Finite State Machine (FSM) based on reactive approach.
+
+To run the FSM you should configure selfDara and partnerData parameters first. You may look at [App.java](https://github.com/minexcoin/atomicswap/blob/master/src/main/java/com/minexcoin/atomic_swap/App.java) file for example. But use only one case during configuration.
+
+After that create an instance of AtomicSwapFSM:
+```java
+final FSM<TxState<TxStatus>> fsm = AtomicSwapFSM.create(
+	selfData, partnerData,
+	true,
+	5, TimeUnit.SECONDS,
+	5, TimeUnit.SECONDS,
+	1000, "AtomicSwapFSM Event", "AtomicSwapFSM-Task-%d"
+);
+```
+
+And finally start the atomic swap process:
+```java
+fsm.start();
+```
