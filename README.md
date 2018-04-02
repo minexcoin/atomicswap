@@ -4,7 +4,7 @@ Atomic swap is a feature to make exchange of cryptocurrencies across different b
 
 Here is source code of application for automated atomic swap between Minexcoin and Bitcoin blockchains in this repo. All actions of the application are performed automatically with no manual actions. The main thing is configuration needed to run a process.
 
-**Keep in mind, atomic swap currently goes on testnet of each cryptocurrency. We are not resposible for running atomic swap on any mainnet!**
+**Keep in mind, atomic swap currently goes on testnet of each cryptocurrency. We are not responsible for running atomic swap on any mainnet!**
 
 ## Configure
 All configurations appears in main function. Customize it according to your situation and environment.

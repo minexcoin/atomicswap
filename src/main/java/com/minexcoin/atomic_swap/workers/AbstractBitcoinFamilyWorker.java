@@ -158,6 +158,7 @@ abstract class AbstractBitcoinFamilyWorker implements Worker {
         final int notificationPort,
         final long timeout, final TimeUnit timeUnit
     )  throws MalformedURLException {
+    	
         return waitPartnerTx(
             Observable.merge(
                 Observable.just(txHash).subscribeOn(Schedulers.io()),
@@ -236,8 +237,12 @@ abstract class AbstractBitcoinFamilyWorker implements Worker {
         final OptionalInt position = IntStream.range(0, tx.vIn().size()).
         filter(index -> {
             final In in = tx.vIn().get(index);
-            return in.txid().equals(txOutPoint.getHash().toString()) &&
-            in.vout() == txOutPoint.getIndex();
+            try {
+            	return in.txid().equals(txOutPoint.getHash().toString()) &&
+                        in.vout() == txOutPoint.getIndex();
+            } catch (Throwable e) {
+            	return false;
+            }
         }).findFirst();
 
 
