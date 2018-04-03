@@ -24,9 +24,6 @@ final public class FormValidator {
             throw new IllegalArgumentException("Socket " + host + ":" + port + " is unknown.");
         }
     }
-    // Validate port number.
-    // Validate EC private key.
-    // Validate EC public key.
     
     /**
      * Try to get RPC credentials.

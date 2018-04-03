@@ -102,18 +102,18 @@ public class HomePageController implements Initializable {
     @SuppressWarnings("restriction")
 	@FXML
     private void exchange(ActionEvent event) {
-        statusTextArea.setText("");
+        cleanStatus();
         
         disableForm();
         try {
             setUpParams();
         } catch (Throwable e) {
-            statusTextArea.appendText("Error: " + e.getMessage() + "\n");
+            logStatus("Error: " + e.getMessage());
             enableForm();
             return;
         }
 
-        statusTextArea.appendText("---- Starting process ----" + "\n");
+        logStatus("---- Starting process ----");
         
         final FSM<TxState<TxStatus>> fsm = AtomicSwapFSM.create(
             selfData, partnerData,
@@ -126,37 +126,37 @@ public class HomePageController implements Initializable {
         fsm.states().subscribe(
             state -> {
                 Platform.runLater(() -> {
-                    statusTextArea.appendText(state.status() + "\n");
+                	logStatus(state.status().toString());
                 });
 
                 switch(state.status()) {
                     case SellerTx: {
                     	Platform.runLater(() -> {
-                    		statusTextArea.appendText("- Generated secret: " + state.selfData().secretHash() + "\n");
-                    		statusTextArea.appendText("- Funding TX out point: " + state.selfData().txOutPoint() + "\n");
+                    		logStatus("- Generated secret: " + state.selfData().secretHash());
+                    		logStatus("- Funding TX out point: " + state.selfData().txOutPoint());
                     	});
                         break;
                     }
                     case BuyerTx: {
                     	Platform.runLater(() -> {
-                    		statusTextArea.appendText("- Funding TX out point: " + state.selfData().txOutPoint() + "\n");
+                    		logStatus("- Funding TX out point: " + state.selfData().txOutPoint());
                     	});
                         break;
                     }
                     case Finish: {
                         if (state.selfData().closeTx() != null) {
                         	Platform.runLater(() -> {
-                        		statusTextArea.appendText("- Close TX: " + state.selfData().closeTx() + "\n");
+                        		logStatus("- Close TX: " + state.selfData().closeTx());
                         	});
                         } else {
                         	Platform.runLater(() -> {
-                        		statusTextArea.appendText("- Close TX: " + state.partnerData().closeTx() + "\n");
+                        		logStatus("- Close TX: " + state.partnerData().closeTx());
                         	});
                         }
                         Platform.runLater(() -> {
-                        	statusTextArea.appendText("---- Atomic swap is done ----");
+                        	logStatus("---- Atomic swap is done ----");
+                        	enableForm();
                         });
-                        enableForm();
                         break;
                     }
                 default:
@@ -167,8 +167,8 @@ public class HomePageController implements Initializable {
                 Platform.runLater(() -> {
                 	StringWriter errors = new StringWriter();
                 	e.printStackTrace(new PrintWriter(errors));
-                    statusTextArea.appendText(errors.toString());
-                    enableForm();
+                	logStatus(errors.toString());
+                	enableForm();
                 });
             }
         );
@@ -428,5 +428,23 @@ public class HomePageController implements Initializable {
         
         typeChoiceBox.setDisable(false);
         exchangeButton.setDisable(false);
+    }
+    
+    /**
+     * Log data into status text area.
+     * 
+     * @param String
+     */
+    private void logStatus(final String data)
+    {
+    	statusTextArea.appendText(data + "\n");
+    }
+    
+    /**
+     * Clean status text area.
+     */
+    private void cleanStatus()
+    {
+    	statusTextArea.setText("");
     }
 }
