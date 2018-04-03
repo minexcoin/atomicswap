@@ -556,7 +556,7 @@ public final class AtomicSwapFSM extends GeneralFSM<TxState<TxStatus>> {
                 partnerData().notificationPort(),
                 0, TimeUnit.MILLISECONDS
             );
-
+            
             waitTxMatureCompleter.run();
             waitTxMatureCompleter.get();
 
@@ -721,6 +721,7 @@ public final class AtomicSwapFSM extends GeneralFSM<TxState<TxStatus>> {
         public void doWaitSellerFundingTx() throws Throwable {
             final byte[] rawSecretHash = new byte[Sha256Hash.LENGTH];
             final byte[] rawTxHash = new byte[Sha256Hash.LENGTH];
+            
             try (
                 final InputStream input = createServerSocket(
                     selfData().inetAddress().getPort(), WaitTxMillisecTimeout

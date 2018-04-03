@@ -121,10 +121,9 @@ public abstract class GeneralFSM<StateT extends Copyable<StateT>> implements FSM
             Observable<StateT>::onBackpressureLatest :
             (Function<Observable<StateT>, Observable<StateT>>)
             Observable<StateT>::onBackpressureBuffer
-        ).apply(
-            subject_.asObservable().
-            subscribeOn(Schedulers.from(executor_))
-        ).subscribe(states_);
+        ).apply(subject_.asObservable()).
+        subscribeOn(Schedulers.from(executor_)).
+        subscribe(states_);
 
         eventThread_ = new AtomicReference<Thread>(null);
     }
